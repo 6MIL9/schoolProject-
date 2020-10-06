@@ -39,6 +39,15 @@ const AuthPage = () => {
         } catch (e) { }
     }
 
+    const testHandler = async () => {
+        try {
+            const data = await request('http://localhost:5000/api/auth/reports', 'GET');
+            message(data.message);
+            console.log(data)
+        } catch (e) { }
+    }
+    
+
     return (
         <div className="row">
             <div className="col s6 offset-s3">
@@ -57,11 +66,13 @@ const AuthPage = () => {
                                 value={form.password} className="yellow-input" onChange={changeHandler} />
                                 <label htmlFor="password">Password</label>
                             </div>
+                            
                         </div>
                     </div>
                     <div className="card-action">
                         <button className="btn green" style={{ marginRight: "1rem" }} onClick={loginHandler} disabled={loading}>Войти</button>
-                        <button className="btn yellow black-text" onClick={registerHandler} disabled={loading}>Регистрация</button>
+                        <button className="btn yellow black-text" style={{ marginRight: "1rem" }} onClick={registerHandler} disabled={loading}>Регистрация</button>
+                        <button className="btn purple white-text" onClick={testHandler} disabled={loading}>Тест</button>
                     </div>
                 </div>
             </div>

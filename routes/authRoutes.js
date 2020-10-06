@@ -1,11 +1,11 @@
 const { Router } = require('express')
+const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const config = require('config')
 const jwt = require('jsonwebtoken')
 const { check, validationResult } = require('express-validator')
 const User = require('../models/User')
 const router = Router()
-
 
 // /api/auth/register
 router.post(
@@ -28,7 +28,7 @@ router.post(
 
             const { email, password } = req.body
 
-            console.log( 1 )
+            console.log(1)
 
             const candidate = await User.findOne({ email })
 
@@ -37,7 +37,7 @@ router.post(
             }
 
             const hashedPassword = await bcrypt.hash(password, 12)
-            const user = new User({ email, password: hashedPassword, userRole: 0})
+            const user = new User({ email, password: hashedPassword, userRole: 0 })
 
             await user.save()
 
@@ -90,6 +90,25 @@ router.post(
 
         } catch (e) {
             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+        }
+    })
+
+router.get(
+    '/reports',
+    async (req, res) => {
+        try {
+             const user = await User.find().sort({ $natural: -1 }).limit(3)
+
+            if (!user) {
+                return res.status(400).json({ message: 'Пользователь не найден' })
+            }
+
+
+            res.json({ user, message: "Успешно" })
+
+        } catch (e) {
+            res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+            console.log(e)
         }
     })
 
