@@ -5,8 +5,8 @@ let mongoose = require('mongoose'),
     model = mongoose.model,
     Types = mongoose.Types,
     autoIncrement = require('mongoose-auto-increment');
-
-const connection = mongoose.createConnection(config.get("mongoUri"), {
+    
+const connection = mongoose.createConnection(config.get("mongoUri"), {  
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
@@ -16,13 +16,13 @@ const connection = mongoose.createConnection(config.get("mongoUri"), {
 autoIncrement.initialize(connection);
 
 const schema = new Schema({
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    reports: [{ type: Types.ObjectId, ref: 'Report' }]
+  title: { type: String, required: true },
+  body: { type: String, required: true },
+  owner: { type: String, required: true  },
 })
 
-schema.plugin(autoIncrement.plugin, 'User');
+schema.plugin(autoIncrement.plugin, 'Report');
 
-let User = connection.model('User', schema);
+let Report = connection.model('Report', schema);
 
-module.exports = User;
+module.exports = Report;

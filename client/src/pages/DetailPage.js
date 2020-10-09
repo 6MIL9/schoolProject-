@@ -13,7 +13,7 @@ const DetailPage = () => {
 
     const getLink = useCallback(async () => {
         try {
-            const fetched = await request(`http://localhost:5000/api/link/${linkId}`, "GET", null, {
+            const fetched = await request(`http://localhost:80/api/link/${linkId}`, "GET", null, {
                 Authorization: `Bearer ${token}`
             })
             setLink(fetched);

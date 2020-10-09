@@ -26,22 +26,22 @@ const AuthPage = () => {
 
     const registerHandler = async () => {
         try {
-            const data = await request('http://localhost:5000/api/auth/register', 'POST', { ...form });
+            const data = await request('http://localhost:80/api/auth/register', 'POST', { ...form });
             message(data.message);
         } catch (e) { }
     }
 
     const loginHandler = async () => {
         try {
-            const data = await request('http://localhost:5000/api/auth/login', 'POST', { ...form });
+            const data = await request('http://localhost:80/api/auth/login', 'POST', { ...form });
             message(data.message);
             auth.login(data.token, data.userId)
         } catch (e) { }
     }
 
-    const testHandler = async () => {
+    const getrep = async () => {
         try {
-            const data = await request('http://localhost:5000/api/auth/reports', 'GET');
+            const data = await request('http://localhost:80/api/report/get', 'GET');
             message(data.message);
             console.log(data)
         } catch (e) { }
@@ -72,7 +72,7 @@ const AuthPage = () => {
                     <div className="card-action">
                         <button className="btn green" style={{ marginRight: "1rem" }} onClick={loginHandler} disabled={loading}>Войти</button>
                         <button className="btn yellow black-text" style={{ marginRight: "1rem" }} onClick={registerHandler} disabled={loading}>Регистрация</button>
-                        <button className="btn purple white-text" onClick={testHandler} disabled={loading}>Тест</button>
+                        <button className="btn purple white-text" onClick={getrep} disabled={loading}>Тест get rep</button>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 {
-    "port": 5000,
+    "port": 80,
     "mongoUri": "mongodb+srv://mainUser:Th3nder9l2004@cluster0.adt7i.mongodb.net/db?retryWrites=true&w=majority",
     "jwtSecret": "emilDev",
-    "baseUrl": "http://localhost:5000"
+    "baseUrl": "http://localhost:80"
 }

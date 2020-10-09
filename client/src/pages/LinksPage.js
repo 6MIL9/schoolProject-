@@ -11,7 +11,7 @@ import LinksList from '../components/LinksList'
 
     const fetchLinks = useCallback(async () => {
         try {
-            const fetched = await request('http://localhost:5000/api/link', 'GET', null, {
+            const fetched = await request('http://localhost:80/api/link', 'GET', null, {
                 Authorization: `Bearer ${token}`
             })
             setLinks(fetched)

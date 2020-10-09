@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const config = require('config')
 const jwt = require('jsonwebtoken')
-const { check, validationResult } = require('express-validator')
+const { check, validationResult, body } = require('express-validator')
 const User = require('../models/User')
 const router = Router()
 
@@ -27,8 +27,6 @@ router.post(
             }
 
             const { email, password } = req.body
-
-            console.log(1)
 
             const candidate = await User.findOne({ email })
 
@@ -57,7 +55,7 @@ router.post(
     ],
     async (req, res) => {
         try {
-            const errors = validationResult(req)
+            const errors = validationResult(req) // в ней проблема, надо что-то делать
 
             if (!errors.isEmpty()) {
                 return res.status(400).json({
@@ -90,25 +88,6 @@ router.post(
 
         } catch (e) {
             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
-        }
-    })
-
-router.get(
-    '/reports',
-    async (req, res) => {
-        try {
-             const user = await User.find().sort({ $natural: -1 }).limit(3)
-
-            if (!user) {
-                return res.status(400).json({ message: 'Пользователь не найден' })
-            }
-
-
-            res.json({ user, message: "Успешно" })
-
-        } catch (e) {
-            res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
-            console.log(e)
         }
     })
 

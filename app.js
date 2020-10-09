@@ -10,8 +10,9 @@ app.use(express.json({ extended: true }))
 app.use(cors());
 
 app.use('/api/auth', require('./routes/authRoutes'))
+app.use('/api/report', require('./routes/reportRoute'))
 
-const PORT = config.get('port') || 5000
+const PORT = config.get('port') || 80
 
 async function start() {
   try {
