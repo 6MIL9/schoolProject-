@@ -18,7 +18,7 @@ autoIncrement.initialize(connection);
 const schema = new Schema({
   title: { type: String, required: true },
   body: { type: String, required: true },
-  owner: { type: String, required: true  },
+  createdBy: { type: Number, required: true  },
 })
 
 schema.plugin(autoIncrement.plugin, 'Report');

@@ -4,6 +4,7 @@ const config = require('config')
 const jwt = require('jsonwebtoken')
 const { check, validationResult } = require('express-validator')
 const Report = require('../models/Report')
+const User = require('../models/User')
 const router = Router()
 
 // /api/report/create
@@ -12,12 +13,12 @@ router.post(
     async (req, res) => {
         try {
 
-            const { title, body, owner } = req.body
+            const { title, body, userId } = req.body
 
-            const report = new Report({ title, body, owner })
+            const report = new Report({ title, body, createdBy: userId })
 
             await report.save()
-
+    
             res.status(201).json({ message: 'Обращение создано успешно' })
 
         } catch (e) {
@@ -26,23 +27,43 @@ router.post(
     })
 
 
-router.get(
-    '/get',
-    async (req, res) => {
-        try {
-            const report = await Report.find().sort({ $natural: -1 }).limit(5)
+// router.get(
+//     '/get',
+//     async (req, res) => {
+//         try {
+//             const report = await Report.find().sort({ $natural: -1 }).limit(5)
 
-            if (!report) {
-                return res.status(400).json({ message: 'Обращение не найдено' })
+//             if (!report) {
+//                 return res.status(400).json({ message: 'Обращение не найдено' })
+//             }
+
+
+//             res.json({ report, message: "Успешно" })
+
+//         } catch (e) {
+//             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+//             console.log(e)
+//         }
+//     })
+
+    router.get(
+        '/get/:userId',
+        async (req, res) => {
+            try {
+                userId = req.params.userId
+
+                const report = await Report.find({createdBy: userId})
+    
+                if (!report) {
+                    return res.status(400).json({ message: 'Обращение не найдено' })
+                }
+    
+                res.json({ report, message: "Успешно" })
+    
+            } catch (e) {
+                res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+                console.log(e)
             }
-
-
-            res.json({ report, message: "Успешно" })
-
-        } catch (e) {
-            res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
-            console.log(e)
-        }
-    })
+        })
 
 module.exports = router

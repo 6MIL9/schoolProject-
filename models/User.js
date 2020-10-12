@@ -18,7 +18,6 @@ autoIncrement.initialize(connection);
 const schema = new Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    reports: [{ type: Types.ObjectId, ref: 'Report' }]
 })
 
 schema.plugin(autoIncrement.plugin, 'User');
