@@ -2,6 +2,7 @@ const express = require('express')
 const config = require('config')
 const cors = require('cors')
 const mongoose = require('mongoose')
+const multer = require("multer");
 
 const app = express()
 
@@ -11,6 +12,7 @@ app.use(cors());
 
 app.use('/api/auth', require('./routes/authRoutes'))
 app.use('/api/report', require('./routes/reportRoute'))
+app.use(express.static(__dirname));
 
 const PORT = config.get('port') || 80
 

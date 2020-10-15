@@ -5,7 +5,12 @@ const jwt = require('jsonwebtoken')
 const { check, validationResult } = require('express-validator')
 const Report = require('../models/Report')
 const User = require('../models/User')
+const ReportImg = require('../models/ReportImg')
 const router = Router()
+const multer = require('multer')
+const upload = multer({ dest: 'uploads/reportImg' })
+const pathF = require('path');
+
 
 // /api/report/create
 router.post(
@@ -18,7 +23,7 @@ router.post(
             const report = new Report({ title, body, createdBy: userId })
 
             await report.save()
-    
+
             res.status(201).json({ message: 'Обращение создано успешно' })
 
         } catch (e) {
@@ -26,44 +31,53 @@ router.post(
         }
     })
 
+// const report = await Report.find().sort({ $natural: -1 }).limit(5)
 
-// router.get(
-//     '/get',
-//     async (req, res) => {
-//         try {
-//             const report = await Report.find().sort({ $natural: -1 }).limit(5)
+router.get(
+    '/get/:userId',
+    async (req, res) => {
+        try {
+            userId = req.params.userId
 
-//             if (!report) {
-//                 return res.status(400).json({ message: 'Обращение не найдено' })
-//             }
+            const report = await Report.find({ createdBy: userId })
 
-
-//             res.json({ report, message: "Успешно" })
-
-//         } catch (e) {
-//             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
-//             console.log(e)
-//         }
-//     })
-
-    router.get(
-        '/get/:userId',
-        async (req, res) => {
-            try {
-                userId = req.params.userId
-
-                const report = await Report.find({createdBy: userId})
-    
-                if (!report) {
-                    return res.status(400).json({ message: 'Обращение не найдено' })
-                }
-    
-                res.json({ report, message: "Успешно" })
-    
-            } catch (e) {
-                res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
-                console.log(e)
+            if (!report) {
+                return res.status(400).json({ message: 'Обращение не найдено' })
             }
-        })
+
+            res.json({ report, message: "Успешно" })
+
+        } catch (e) {
+            res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+            console.log(e)
+        }
+    })
+
+router.post(
+    '/setReportImg',
+    upload.single('reportImg'),
+    async (req, res) => {
+        try {
+            let reportImg = req.file;
+
+            if (!reportImg) {
+                res.json({ message: "Ошибка при загрузке файла" })
+            }
+            else {
+                const { filename, path, originalname } = reportImg
+                let extension = pathF.parse(originalname).ext;
+                let fileName = filename + extension        
+    
+                const img = new ReportImg({ fileName, path })
+
+                await img.save()
+
+                res.status(201).json({ message: 'Файл загружен' })
+            }
+        } catch (e) {
+            res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+            console.log(e);
+        }
+    })
 
 module.exports = router
