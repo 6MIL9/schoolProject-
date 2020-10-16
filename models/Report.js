@@ -19,6 +19,7 @@ const schema = new Schema({
   title: { type: String, required: true },
   body: { type: String, required: true },
   createdBy: { type: Number, required: true  },
+  urlToImg: { type: String, required: true}
 })
 
 schema.plugin(autoIncrement.plugin, 'Report');

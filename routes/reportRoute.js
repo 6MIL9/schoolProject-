@@ -8,8 +8,21 @@ const User = require('../models/User')
 const ReportImg = require('../models/ReportImg')
 const router = Router()
 const multer = require('multer')
-const upload = multer({ dest: 'uploads/reportImg' })
 const pathF = require('path');
+
+const fileFilter = (req, file, cb) => {
+
+    if (file.mimetype === "image/png" ||
+        file.mimetype === "image/jpg" ||
+        file.mimetype === "image/jpeg") {
+        cb(null, true);
+    }
+    else {
+        cb(null, false);
+    }
+}
+
+const upload = multer({ dest: 'uploads/reportImg', fileFilter: fileFilter })
 
 
 // /api/report/create
@@ -18,9 +31,9 @@ router.post(
     async (req, res) => {
         try {
 
-            const { title, body, userId } = req.body
+            const { title, body, userId, url } = req.body
 
-            const report = new Report({ title, body, createdBy: userId })
+            const report = new Report({ title, body, createdBy: userId, urlToImg: url})
 
             await report.save()
 
@@ -66,13 +79,14 @@ router.post(
             else {
                 const { filename, path, originalname } = reportImg
                 let extension = pathF.parse(originalname).ext;
-                let fileName = filename + extension        
-    
-                const img = new ReportImg({ fileName, path })
+                let fileName = filename + extension
+                let pathTo = path + extension
+
+                const img = new ReportImg({ fileName, pathTo })
 
                 await img.save()
 
-                res.status(201).json({ message: 'Файл загружен' })
+                res.status(201).json({ message: 'Файл загружен', url: pathTo })
             }
         } catch (e) {
             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
