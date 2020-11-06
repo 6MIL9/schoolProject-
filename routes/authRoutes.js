@@ -11,7 +11,7 @@ const router = Router()
 router.post(
     '/register',
     [
-        check('email', 'Некорректный email').isEmail(),
+        check('email', 'Некорректный email').normalizeEmail().isEmail(),
         check('password', 'Минимальная длина пароля 6 символов')
             .isLength({ min: 6 })
     ],

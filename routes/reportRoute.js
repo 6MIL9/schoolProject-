@@ -22,7 +22,20 @@ const fileFilter = (req, file, cb) => {
     }
 }
 
-const upload = multer({ dest: 'uploads/reportImg', fileFilter: fileFilter })
+const storage = multer.diskStorage(
+    {
+        destination: function(req, file, cb)
+        {
+            cb(null, 'uploads/reportImg');
+        },
+        filename: function(req, file, cb)
+        {
+            cb(null, Date.now() + file.originalname);
+        }
+    });
+    
+
+const upload = multer({ storage, fileFilter: fileFilter })
 
 
 // /api/report/create
@@ -78,9 +91,8 @@ router.post(
             }
             else {
                 const { filename, path, originalname } = reportImg
-                let extension = pathF.parse(originalname).ext;
-                let fileName = filename + extension
-                let pathTo = path + extension
+                let fileName = filename
+                let pathTo = path
 
                 const img = new ReportImg({ fileName, pathTo })
 
