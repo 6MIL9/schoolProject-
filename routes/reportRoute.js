@@ -24,16 +24,14 @@ const fileFilter = (req, file, cb) => {
 
 const storage = multer.diskStorage(
     {
-        destination: function(req, file, cb)
-        {
+        destination: function (req, file, cb) {
             cb(null, 'uploads/reportImg');
         },
-        filename: function(req, file, cb)
-        {
+        filename: function (req, file, cb) {
             cb(null, Date.now() + file.originalname);
         }
     });
-    
+
 
 const upload = multer({ storage, fileFilter: fileFilter })
 
@@ -46,11 +44,11 @@ router.post(
 
             const { title, body, userId, url } = req.body
 
-            const report = new Report({ title, body, createdBy: userId, urlToImg: url})
+            const report = new Report({ title, body, createdBy: userId, urlToImg: url })
 
             await report.save()
 
-            res.status(201).json({ message: 'Обращение создано успешно' })
+            res.status(200).json({ response: 200 })
 
         } catch (e) {
             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
@@ -72,6 +70,24 @@ router.get(
             }
 
             res.json({ report, message: "Успешно" })
+
+        } catch (e) {
+            res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+            console.log(e)
+        }
+    })
+
+router.get(
+    '/get',
+    async (req, res) => {
+        try {
+            const reports = await Report.find().sort({ $natural: -1 }).limit(10)
+
+            if (!reports) {
+                return res.status(400).json({ message: 'Обращение не найдено' })
+            }
+
+            res.json({ reports, message: "Успешно" })
 
         } catch (e) {
             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
