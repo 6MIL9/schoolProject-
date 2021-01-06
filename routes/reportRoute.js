@@ -56,7 +56,6 @@ router.post(
     })
 
 // const report = await Report.find().sort({ $natural: -1 }).limit(5)
-
 router.get(
     '/get/:userId',
     async (req, res) => {

@@ -1,6 +1,7 @@
 {
     "port": 80,
     "mongoUri": "mongodb+srv://mainUser:Th3nder9l2004@cluster0.adt7i.mongodb.net/db?retryWrites=true&w=majority",
-    "jwtSecret": "emilDev",
+    "jwtSecret": "3iNA4bYlX75lSYK",
+    "jwtSecretRefresh": "KJrAnR9Bw0LBr2G",
     "baseUrl": "http://localhost:80"
 }
