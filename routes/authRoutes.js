@@ -62,7 +62,11 @@ router.post(
             if (!errors.isEmpty()) {
                 return res.status(400).json({
                     errors: errors.array(),
-                    message: 'Некорректный данные при входе в систему'
+                    message: 'Некорректный данные при входе в систему',
+                    data: {
+                        email: req.email,
+                        password: req.password
+                    }
                 })
             }
 
