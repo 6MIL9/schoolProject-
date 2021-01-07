@@ -35,20 +35,19 @@ const storage = multer.diskStorage(
 
 const upload = multer({ storage, fileFilter: fileFilter })
 
-
 // /api/report/create
 router.post(
     '/create',
     async (req, res) => {
         try {
 
-            const { title, body, userId, url } = req.body
+            const { title, body, userId, urlToImg } = req.body
 
-            const report = new Report({ title, body, createdBy: userId, urlToImg: url })
+            const report = new Report({ title, body, createdBy: userId, urlToImg })
 
             await report.save()
 
-            res.status(200).json({ response: 200 })
+            res.status(200).json({ message: "Жалоба создана успешно" })
 
         } catch (e) {
             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
@@ -62,13 +61,13 @@ router.get(
         try {
             userId = req.params.userId
 
-            const report = await Report.find({ createdBy: userId })
+            const reports = await Report.find({ createdBy: userId })
 
             if (!report) {
-                return res.status(400).json({ message: 'Обращение не найдено' })
+                return res.status(400).json({ message: 'Обращения не найдены' })
             }
 
-            res.json({ report, message: "Успешно" })
+            res.status(200).json({ reports, message: "Успешно" })
 
         } catch (e) {
             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
@@ -83,10 +82,10 @@ router.get(
             const reports = await Report.find().sort({ $natural: -1 }).limit(10)
 
             if (!reports) {
-                return res.status(400).json({ message: 'Обращение не найдено' })
+                return res.status(400).json({ message: 'Обращения не найдены' })
             }
 
-            res.json({ reports, message: "Успешно" })
+            res.status(200).json({ reports, message: "Успешно" })
 
         } catch (e) {
             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
@@ -113,7 +112,7 @@ router.post(
 
                 await img.save()
 
-                res.status(201).json({ message: 'Файл загружен', url: pathTo })
+                res.status(200).json({ message: 'Файл загружен', url: pathTo })
             }
         } catch (e) {
             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
