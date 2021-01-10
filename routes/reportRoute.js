@@ -56,18 +56,18 @@ router.post(
 
 // const report = await Report.find().sort({ $natural: -1 }).limit(5)
 router.get(
-    '/get/:userId',
+    '/get/:id',
     async (req, res) => {
         try {
-            userId = req.params.userId
+            id = req.params.id
 
-            const reports = await Report.find({ createdBy: userId })
+            const report = await Report.find({ _id: id })
 
-            if (!report) {
-                return res.status(400).json({ message: 'Обращения не найдены' })
+            if (report.length === 0) {
+                return res.status(400).json({ message: 'Обращение не найдено' })
             }
 
-            res.status(200).json({ reports, message: "Успешно" })
+            res.status(200).json({ report, message: "Успешно" })
 
         } catch (e) {
             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
