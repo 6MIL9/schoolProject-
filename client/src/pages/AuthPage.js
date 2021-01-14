@@ -41,11 +41,20 @@ const AuthPage = () => {
 
     const getrep = async () => {
         try {
-            const data = await request('http://localhost:80/api/report/get', 'GET');
+            const data = await request('http://193.124.118.54/api/report/get', 'GET');
             message(data.message);
-            console.log(data)
+            console.log(data.reports[0].urlToImg)
         } catch (e) { }
     }
+
+    const getrepById = async () => {
+        try {
+            const data = await request('http://193.124.118.54/api/report/get/20', 'GET');
+            console.log(data.report[0].urlToImg)
+        } catch (e) { }
+    }
+
+    
 
 
     return (
@@ -77,6 +86,7 @@ const AuthPage = () => {
                         <button className="btn green" style={{ marginRight: "1rem" }} onClick={loginHandler} disabled={loading}>Войти</button>
                         <button className="btn yellow black-text" style={{ marginRight: "1rem" }} onClick={registerHandler} disabled={loading}>Регистрация</button>
                         <button className="btn purple white-text" onClick={getrep} disabled={loading}>Тест get rep</button>
+                        <button className="btn purple white-text" onClick={getrepById} disabled={loading}>Тест get rer 20</button>
                     </div>
                 </div>
             </div>

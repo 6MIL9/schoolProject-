@@ -80,8 +80,9 @@ router.get(
     async (req, res) => {
         try {
             const reports = await Report.find().sort({ $natural: -1 }).limit(10)
+            
 
-            if (!reports) {
+            if (reports.length === 0) {
                 return res.status(400).json({ message: 'Обращения не найдены' })
             }
 
@@ -104,9 +105,9 @@ router.post(
                 res.json({ message: "Ошибка при загрузке файла" })
             }
             else {
-                const { filename, path, originalname } = reportImg
+                const { filename, path } = reportImg
                 let fileName = filename
-                let pathTo = path
+                let pathTo = path.replace(/\\/g, "/")
 
                 const img = new ReportImg({ fileName, pathTo })
 
