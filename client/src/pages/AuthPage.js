@@ -75,7 +75,7 @@ const AuthPage = () => {
                                     value={form.password} className="yellow-input" onChange={changeHandler} />
                                 <label htmlFor="password">Password</label>
                             </div>
-                            <form action="http://localhost:80/api/report/setReportImg" method="post" enctype="multipart/form-data">
+                            <form action="http://193.124.118.54/api/report/setReportImg" method="post" enctype="multipart/form-data">
                                 <input type="file" name="reportImg" />
                                 <input type="submit" value="Send" />
                             </form>

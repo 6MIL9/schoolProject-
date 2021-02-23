@@ -1,14 +1,8 @@
 const { Router } = require('express')
-const mongoose = require('mongoose')
-const config = require('config')
-const jwt = require('jsonwebtoken')
-const { check, validationResult } = require('express-validator')
 const Report = require('../models/Report')
-const User = require('../models/User')
 const ReportImg = require('../models/ReportImg')
 const router = Router()
 const multer = require('multer')
-const pathF = require('path');
 
 const fileFilter = (req, file, cb) => {
 
@@ -80,7 +74,6 @@ router.get(
     async (req, res) => {
         try {
             const reports = await Report.find().sort({ $natural: -1 }).limit(10)
-            
 
             if (reports.length === 0) {
                 return res.status(400).json({ message: 'Обращения не найдены' })
