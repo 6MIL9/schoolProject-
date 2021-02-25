@@ -3,6 +3,7 @@ const Report = require('../models/Report')
 const ReportImg = require('../models/ReportImg')
 const router = Router()
 const multer = require('multer')
+const verifyToken = require('../middleware/verifyTokenMW')
 
 const fileFilter = (req, file, cb) => {
 
@@ -32,6 +33,7 @@ const upload = multer({ storage, fileFilter: fileFilter })
 // /api/report/create
 router.post(
     '/create',
+    verifyToken,
     async (req, res) => {
         try {
 

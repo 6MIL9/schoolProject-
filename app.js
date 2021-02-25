@@ -14,7 +14,7 @@ app.use('/api/auth', require('./routes/authRoutes'))
 app.use('/api/report', require('./routes/reportRoute'))
 app.use(express.static(__dirname));
 
-const PORT = config.get('port') || 80
+const PORT = config.get('port') || 1024
 
 async function start() {
   try {

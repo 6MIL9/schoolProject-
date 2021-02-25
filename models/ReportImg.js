@@ -17,7 +17,7 @@ autoIncrement.initialize(connection);
 
 const schema = new Schema({
     fileName: { type: String, required: true, unique: true },
-    pathTo: { type: String, required: true },
+    pathTo: { type: String, required: true }
 })
 
 schema.plugin(autoIncrement.plugin, 'ReportImg');

@@ -107,30 +107,31 @@ router.get('/me', VerifyToken, function (req, res, next) {
 
 router.post(
     '/refreshToken',
+    VerifyToken,
     async (req, res) => {
         try {
             const { accessToken, rfToken, userId } = req.body
 
-            jwt.verify(accessToken, config.get('jwtSecret'), function (err, decoded) {
-                if (err) {
+            jwt.verify(accessToken, config.get('jwtSecret'), function (err) {
 
-                    const newAccessToken = jwt.sign(
-                        { userId: userId },
-                        config.get('jwtSecret'),
-                        { expiresIn: '1h' }
-                    )
-        
-                    const newRfToken = jwt.sign(
-                        { userId: userId },
-                        config.get('jwtSecretRefresh'),
-                        { expiresIn: '90d' }
-                    )
+                const newAccessToken = jwt.sign(
+                    { userId: userId },
+                    config.get('jwtSecret'),
+                    { expiresIn: '1h' }
+                )
+
+                const newRfToken = jwt.sign(
+                    { userId: userId },
+                    config.get('jwtSecretRefresh'),
+                    { expiresIn: '90d' }
+                )
+
+                if (err) {
                     return res.status(500).send({ accessToken: newAccessToken, rfToken: newRfToken, message: 'Срок действия токена доступа истёк' });
                 } else {
-                    jwt.verify(rfToken, config.get('jwtSecretRefresh'), function (err, decoded) {
-                        if (err) return res.status(500).send({ message: 'Срок действия токена обновления истёк' });
+                    jwt.verify(rfToken, config.get('jwtSecretRefresh'), function (err) {
+                        if (err) return res.status(500).send({ accessToken: newAccessToken, rfToken: newRfToken, message: 'Срок действия токена обновления истёк' });
                     });
-
                     res.status(200).json({ accessToken, rfToken, message: "Обновлять токены не нужно" })
                 }
             });
