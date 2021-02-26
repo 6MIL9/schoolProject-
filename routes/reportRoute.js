@@ -78,7 +78,7 @@ router.get(
             const reports = await Report.find().sort({ $natural: -1 }).limit(10)
 
             if (reports.length === 0) {
-                return res.status(200).json({reports: null},{ message: 'Обращения не найдены' })
+                return res.status(200).json({reports: null, message: 'Обращения не найдены' })
             }
 
             res.status(200).json({ reports, message: "Успешно" })
