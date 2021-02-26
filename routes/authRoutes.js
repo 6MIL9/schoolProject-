@@ -96,7 +96,7 @@ router.post(
         }
     })
 
-router.get('/me', VerifyToken, function (req, res, next) {
+router.get('/me', VerifyToken, async function (req, res, next) {
     User.findById(req.userId, { password: 0 }, function (err, user) {
         if (err) return res.status(500).send("Что-то пошло не так, попробуйте снова");
         if (!user) return res.status(404).send("Пользователь не найден");

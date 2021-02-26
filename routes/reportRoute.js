@@ -36,8 +36,9 @@ router.post(
     verifyToken,
     async (req, res) => {
         try {
-
-            const { title, body, userId, urlToImg } = req.body
+            const userId = req.userId
+            
+            const { title, body, urlToImg } = req.body
 
             const report = new Report({ title, body, createdBy: userId, urlToImg })
 
@@ -46,6 +47,7 @@ router.post(
             res.status(200).json({ message: "Жалоба создана успешно" })
 
         } catch (e) {
+            console.log(e)
             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
         }
     })
