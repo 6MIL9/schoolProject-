@@ -37,7 +37,7 @@ router.post(
     async (req, res) => {
         try {
             const userId = req.userId
-            
+
             const { title, body, urlToImg } = req.body
 
             const report = new Report({ title, body, createdBy: userId, urlToImg })
@@ -62,14 +62,14 @@ router.get(
             const report = await Report.find({ _id: id })
 
             if (report.length === 0) {
-                return res.status(400).json({ message: 'Обращение не найдено' })
+                return res.status(200).json({ report: null, message: 'Обращение не найдено' })
             }
 
             res.status(200).json({ report, message: "Успешно" })
 
         } catch (e) {
             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
-            console.log(e)
+            console.log(e)  
         }
     })
 
