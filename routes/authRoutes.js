@@ -1,9 +1,8 @@
 const { Router } = require('express')
-const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const config = require('config')
 const jwt = require('jsonwebtoken')
-const { check, validationResult, body } = require('express-validator')
+const { check, validationResult } = require('express-validator')
 const VerifyToken = require('../middleware/verifyTokenMW');
 const User = require('../models/User')
 const RefreshToken = require('../models/RefreshToken')
@@ -35,8 +34,8 @@ router.post(
             res.status(200).json({ message: 'Пользователь создан' })
 
         } catch (e) {
-            res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
             console.log(e)
+            res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
         }
     })
 
@@ -92,15 +91,18 @@ router.post(
             res.status(200).json({ token, refreshToken, userId: user.id, message: "Успешно" })
 
         } catch (e) {
+            console.log(e)
             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
         }
     })
 
-router.get('/me', VerifyToken, async function (req, res, next) {
+router.get('/me', VerifyToken, async function (req, res) {
     User.findById(req.userId, { password: 0 }, function (err, user) {
-        if (err) return res.status(500).send("Что-то пошло не так, попробуйте снова");
+        if (err) {
+            console.log(err)
+            return res.status(500).send("Что-то пошло не так, попробуйте снова");
+        }
         if (!user) return res.status(404).send("Пользователь не найден");
-
         res.status(200).send(user);
     });
 });
@@ -127,17 +129,18 @@ router.post(
                 )
 
                 if (err) {
+                    console.log(err)
                     return res.status(500).send({ accessToken: newAccessToken, rfToken: newRfToken, message: 'Срок действия токена доступа истёк' });
                 } else {
                     jwt.verify(rfToken, config.get('jwtSecretRefresh'), function (err) {
                         if (err) return res.status(500).send({ accessToken: newAccessToken, rfToken: newRfToken, message: 'Срок действия токена обновления истёк' });
                     });
                     res.status(200).json({ accessToken, rfToken, message: "Обновлять токены не нужно" })
-                }
+                }    
             });
         } catch (e) {
-            res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
             console.log(e)
+            res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
         }
     })
 

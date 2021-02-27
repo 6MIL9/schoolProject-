@@ -51,13 +51,29 @@ router.post(
             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
         }
     })
+router.get(
+    '/get',
+    async (req, res) => {
+        try {
+            const reports = await Report.find().sort({ $natural: -1 }).limit(50)
 
-// const report = await Report.find().sort({ $natural: -1 }).limit(5)
+            if (reports.length === 0) {
+                return res.status(200).json({ reports: null, message: 'Обращения не найдены' })
+            }
+
+            res.status(200).json({ reports, message: "Успешно" })
+
+        } catch (e) {
+            console.log(e)
+            res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+        }
+    })
+
 router.get(
     '/get/:id',
     async (req, res) => {
         try {
-            id = req.params.id
+            const id = req.params.id
 
             const report = await Report.find({ _id: id })
 
@@ -66,28 +82,27 @@ router.get(
             }
 
             res.status(200).json({ report, message: "Успешно" })
-
         } catch (e) {
+            console.log(e)
             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
-            console.log(e)  
         }
     })
 
 router.get(
-    '/get',
+    '/user',
+    verifyToken,
     async (req, res) => {
         try {
-            const reports = await Report.find().sort({ $natural: -1 }).limit(10)
+            const reports = await Report.find({ createdBy: req.userId })
 
             if (reports.length === 0) {
-                return res.status(200).json({reports: null, message: 'Обращения не найдены' })
+                return res.status(200).json({ reports: null, message: 'Обращения не найдены' })
             }
 
             res.status(200).json({ reports, message: "Успешно" })
-
         } catch (e) {
-            res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
             console.log(e)
+            res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
         }
     })
 
@@ -113,8 +128,8 @@ router.post(
                 res.status(200).json({ message: 'Файл загружен', url: pathTo })
             }
         } catch (e) {
+            console.log(e)
             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
-            console.log(e);
         }
     })
 
