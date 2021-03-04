@@ -74,13 +74,12 @@ router.get(
     async (req, res) => {
         try {
             const id = req.params.id
-
-            const report = await Report.find({ _id: id })
-
-            if (report.length === 0) {
+            const array = await Report.find({ _id: id })
+            const report = array[0]
+            
+            if (!report) {
                 return res.status(200).json({ report: null, message: 'Обращение не найдено' })
             }
-
             res.status(200).json({ report, message: "Успешно" })
         } catch (e) {
             console.log(e)
